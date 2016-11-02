@@ -126,7 +126,7 @@
 
 // Optional custom name for your RepStrap or other custom machine
 // Displayed in the LCD "Ready" message
-//#define CUSTOM_MACHINE_NAME "3D Printer"
+#define CUSTOM_MACHINE_NAME "Mr Printer"
 
 // Define this to set a unique identifier for this printer, (Used by some programs to differentiate between machines)
 // You can use an online service to generate a random UUID. (eg http://www.uuidgenerator.net/version4)
@@ -174,10 +174,10 @@
 // 2 = X-Box 360 203Watts (the blue wire connected to PS_ON and the red wire to VCC)
 // :{1:'ATX',2:'X-Box 360'}
 
-#define POWER_SUPPLY 1
+#define POWER_SUPPLY 2
 
 // Define this to have the electronics keep the power supply off on startup. If you don't know what this is leave it.
-//#define PS_DEFAULT_OFF
+#define PS_DEFAULT_OFF
 
 // @section temperature
 
@@ -262,7 +262,7 @@
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
-#define BED_MAXTEMP 150
+#define BED_MAXTEMP 120
 
 //===========================================================================
 //============================= PID Settings ================================
@@ -320,7 +320,7 @@
 // If your configuration is significantly different than this and you don't understand the issues involved, you probably
 // shouldn't use bed PID until someone else verifies your hardware works.
 // If this is enabled, find your own PID constants below.
-//#define PIDTEMPBED
+#define PIDTEMPBED
 
 //#define BED_LIMIT_SWITCHING
 
@@ -328,7 +328,15 @@
 // all forms of bed control obey this (PID, bang-bang, bang-bang with hysteresis)
 // setting this to anything other than 255 enables a form of PWM to the bed just like HEATER_BED_DUTY_CYCLE_DIVIDER did,
 // so you shouldn't use it unless you are OK with PWM on your bed.  (see the comment on enabling PIDTEMPBED)
-#define MAX_BED_POWER 255 // limits duty cycle to bed; 255=full current
+
+
+#define MAX_BED_POWER 222 // limits duty cycle to bed; 255=full current
+                          // set to 222 (~87%) since I'm using 19V for the bed PS now. 
+                          // which gives 17.6V at the actual bed, 87% of is ~15V, which seems safe...
+                          // but wasn't since something burned.. back to 255. 
+                          //
+                          // OK, fried the bed MOSFET, and replaced it... with an added heatsink this time
+                          // trying 19V PS again. back to 222
 
 #if ENABLED(PIDTEMPBED)
 
@@ -349,6 +357,37 @@
   //#define  DEFAULT_bedKd 1675.16
 
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
+/*
+
+>>> M303 E-1 C8 S80
+SENDING:M303 E-1 C8 S80
+PID Autotune start
+ bias: 167 d: 87 min: 79.47 max: 80.08
+ bias: 186 d: 68 min: 79.58 max: 80.12
+ bias: 160 d: 94 min: 79.90 max: 80.29 Ku: 613.96 Tu: 16.91 Classic PID
+ Kp: 368.38 Ki: 43.57 Kd: 778.56
+ bias: 138 d: 116 min: 79.97 max: 80.37 Ku: 732.23 Tu: 13.37 Classic PID
+ Kp: 439.34 Ki: 65.72 Kd: 734.25
+ bias: 130 d: 124 min: 79.91 max: 80.30 Ku: 812.15 Tu: 11.01 Classic PID
+ Kp: 487.29 Ki: 88.52 Kd: 670.63
+ bias: 130 d: 124 min: 79.89 max: 80.21 Ku: 962.91 Tu: 10.22 Classic PID
+ bias: 130 d: 124 min: 79.82 max: 80.21 Ku: 819.56 Tu: 10.22 Classic PID
+ Kp: 491.74 Ki: 96.19 Kd: 628.44
+ bias: 130 d: 124 min: 79.82 max: 80.18 Ku: 880.80 Tu: 10.22 Classic PID
+ Kp: 528.48 Ki: 103.38 Kd: 675.39PID Autotune finished! Put the last Kp, Ki and Kd constants from below into Configuration.h
+
+
+#define  DEFAULT_1Kp 528.48#define  DEFAULT_1Ki 103.38#define  DEFAULT_1Kd 675.39
+
+
+*/
+//#define  DEFAULT_bedKp 528.48
+//#define  DEFAULT_bedKi 103.38
+//#define  DEFAULT_bedKd 675.39
+
+
+
+
 #endif // PIDTEMPBED
 
 // @section extruder
@@ -755,27 +794,27 @@
 
 // default settings
 
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {80,80,4000,500}  // default steps per unit for Ultimaker
-#define DEFAULT_MAX_FEEDRATE          {300, 300, 5, 25}    // (mm/sec)
-#define DEFAULT_MAX_ACCELERATION      {3000,3000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
-
-#define DEFAULT_ACCELERATION          3000    // X, Y, Z and E acceleration in mm/s^2 for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  3000    // E acceleration in mm/s^2 for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   3000    // X, Y, Z acceleration in mm/s^2 for travel (non printing) moves
-
-// The speed change that does not require acceleration (i.e. the software might assume it can be done instantaneously)
-#define DEFAULT_XYJERK                20.0    // (mm/sec)
-#define DEFAULT_ZJERK                 0.4     // (mm/sec)
-#define DEFAULT_EJERK                 5.0    // (mm/sec)
-*/
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   {80,80,4000,500}  // default steps per unit for Ultimaker
+//#define DEFAULT_MAX_FEEDRATE          {300, 300, 5, 25}    // (mm/sec)
+//#define DEFAULT_MAX_ACCELERATION      {3000,3000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
+//
+//#define DEFAULT_ACCELERATION          3000    // X, Y, Z and E acceleration in mm/s^2 for printing moves
+//#define DEFAULT_RETRACT_ACCELERATION  3000    // E acceleration in mm/s^2 for retracts
+//#define DEFAULT_TRAVEL_ACCELERATION   3000    // X, Y, Z acceleration in mm/s^2 for travel (non printing) moves
+//
+//// The speed change that does not require acceleration (i.e. the software might assume it can be done instantaneously)
+//#define DEFAULT_XYJERK                20.0    // (mm/sec)
+//#define DEFAULT_ZJERK                 0.4     // (mm/sec)
+//#define DEFAULT_EJERK                 5.0    // (mm/sec)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // settings specific to Mr Printer below
 
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {160.295,160.141,32*200.0/0.8,288}  // default steps per unit for mr. printer (my i3)
+// #define DEFAULT_AXIS_STEPS_PER_UNIT   {160,128,32*200.0/0.8,288}  // default steps per unit for mr. printer X(20T) & Y(25T pulley) from the prusa calculator
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {160.295,127.666,32*200.0/0.8,288}  // default steps per unit for mr. printer (my i3) measured
 
 #define DEFAULT_MAX_FEEDRATE          {500, 500, 4, 25}    // (mm/sec)
-#define DEFAULT_MAX_ACCELERATION      {2000,2000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
+#define DEFAULT_MAX_ACCELERATION      {2000,1800,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
 
 #define DEFAULT_ACCELERATION          2000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  2000   // X, Y, Z and E max acceleration in mm/s^2 for retracts
@@ -986,10 +1025,8 @@
 // :['JAPANESE','WESTERN','CYRILLIC']
 //
 
-#define DISPLAY_CHARSET_HD44780_JAPAN        // this is the most common hardware
+#define DISPLAY_CHARSET_HD44780 JAPANESE
 
-//#define DISPLAY_CHARSET_HD44780_WESTERN
-//#define DISPLAY_CHARSET_HD44780_CYRILLIC
 
 //
 // LCD TYPE
